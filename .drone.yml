@@ -3,11 +3,19 @@ type: docker
 name: default
 
 steps:
-- name: build
-  image: python:3.9
-  commands:
-    - pip install -r requirements.txt
-    - python setup.py install
+
+- name: publish-image
+  image: plugins/docker
+  settings: 
+    dockerfile: Dockerfile
+    context: .
+    registry: hub.codefirst.iut.uca.fr
+    repo: hub.codefirst.iut.uca.fr/corentin.richard/babamaco
+    username:
+      from_secret: SECRET_REGISTRY_USERNAME
+    password:
+      from_secret: SECRET_REGISTRY_PASSWORD 
+
 
 trigger:
   event:
