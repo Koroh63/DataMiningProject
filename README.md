@@ -47,16 +47,3 @@ Afin de lancer le projet il faut se situer à la source du projet et lancer la c
 <img src="https://codefirst.iut.uca.fr/git/avatars/4372364870f18ab9104f13222fa84d2e?size=870" width="50" >
 </a>
 </div>
-
----
-catastrophe
-  * **Colonne *Start Month* :**  Cette colonne donne le mois de début de la catastrophe si elle a duré sur une période
-  * **Colonne *Start Day* :** Cette colonne donne le jour de début de la catastrophe
-  * **Colonne *End Year* :** Cette colonne indique l'année de fin de la  catastrophe
-  * **Colonne *End Month* :** Cette colonne indique le mois de fin de la catastrophe
-  * **Colonne *End Day* :** Cette colonne indique le jour de la fin de catastrophe
-  * **Colonne *Total Deaths* :** Cette colonne donne le nombre total de morts dues à la catastrophe naturelle
-  * **Colonne *No Injured* :** Cette colonne précise le nombre de personnes blessées durant la catastrophe
-  * **Colonne *No Affected* :** Cette colonne donne le nombre total de personnes affectées par cette catastrophe
-  * **Colonne *No Homeless* :** Cette colonne indique le nombre total de personnes qui ont perdu leur logement à cause de cette catastrophe
-  * **Colonne *Total Affected* :** Pour finir, cette colonne donne le nombre total de personnes affectées par la catastrophe
