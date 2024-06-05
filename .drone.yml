@@ -16,6 +16,15 @@ steps:
     password:
       from_secret: SECRET_REGISTRY_PASSWORD 
 
+- name: deploy-container
+  image: hub.codefirst.iut.uca.fr/thomas.bellembois/codefirst-dockerproxy-clientdrone:latest
+  environment:
+    IMAGENAME: hub.codefirst.iut.uca.fr/corentin.richard/babamaco:latest
+    CONTAINERNAME: babamaco
+    COMMAND: create
+    OVERWRITE: true
+    ADMINS: marcthiery,corentinrichard,baptistebaverel
+  depends_on: [ publish-image ]
 
 trigger:
   event:
