@@ -1,0 +1,15 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: python:3.9
+  commands:
+    - pip install -r requirements.txt
+    - python setup.py install
+
+trigger:
+  event:
+    - push
+    - pull_request
