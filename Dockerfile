@@ -11,4 +11,4 @@ COPY /app .
 
 EXPOSE 8080
 
-ENTRYPOINT ["streamlit", "run", "main.py", "--server.port=8080"]
+ENTRYPOINT ["streamlit", "run", "main.py", "--server.port=8080", "--server.fileWatcherType"]
