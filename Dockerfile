@@ -5,8 +5,7 @@ WORKDIR /app
 # Install necessary dependencies
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir visions==0.7.5
-RUN pip install --no-cache-dir joblib==1.4.2 --no-cache-dir
+RUN pip install --no-cache-dir joblib==1.4.2
 RUN pip install streamlit-pandas-profiling
 
 # Copy the rest of the application code
