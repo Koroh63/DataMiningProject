@@ -32,3 +32,6 @@ trigger:
   branch:
     exclude:
     - prediction
+    - normalisation
+    - addingCICD
+    - clustering
