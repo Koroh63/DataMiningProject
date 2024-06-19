@@ -1,8 +1,21 @@
 from pandas import *
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error,r2_score
+from sklearn.metrics import mean_squared_error,r2_score,accuracy_score
 from sklearn.linear_model import LogisticRegression
+
+def checkTypePrediction(df,toPredict : str ):
+    if(df[toPredict].dtypes=='object'):
+        return classificationLogisticRegression(df,toPredict=toPredict)
+    else:
+        return regressionLinear(df,toPredict=toPredict)
+
+def transformData(df:DataFrame):
+    for columnN in range(len(df.dtypes)):
+        if(df.dtypes[columnN]=='object'):
+            type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
+            df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
+    return df
 
 def separateValuesRegression(df : DataFrame, toPredict : str):
     """
@@ -74,6 +87,7 @@ def initTraining(x,y):
     return Xtrain,Xtest,ytrain,ytest
 
 def regressionLinear(df : DataFrame, toPredict :str):
+    df = transformData(df)
     # Separate features and target variable for regression
     X,Y = separateValuesRegression(df,toPredict)
         
@@ -103,8 +117,9 @@ def regressionLinear(df : DataFrame, toPredict :str):
 
 
 def classificationLogisticRegression(df : DataFrame, toPredict :str):
+        df = transformData(df)
     # Separate features and target variable for classification
-        X,Y = separateValuesClassification(fullDataSet)
+        X,Y = separateValuesClassification(df,toPredict=toPredict)
 
         # Initialize training and testing data
         Xtrain,Xtest,ytrain,ytest = initTraining(X,Y)
