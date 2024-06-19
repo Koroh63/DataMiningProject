@@ -11,10 +11,7 @@ from ydata_profiling import ProfileReport
 
 baseView()
 
-# def describeChargedData():
 st.title("Datas loaded")
 st.dataframe(st.session_state.df)
-# pr = st.session_state.df.profile_report()
 pr = ProfileReport(st.session_state.df)
-# print(profile)
 st_profile_report(pr)
