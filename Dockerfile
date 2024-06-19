@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install necessary dependencies
 COPY requirements.txt ./
-RUN pip install streamlit-pandas-profiling --no-cache-dir
+RUN pip install --no-cache-dir streamlit-pandas-profiling
 RUN pip install --no-cache-dir -r requirements.txt
 
 
