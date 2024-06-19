@@ -18,4 +18,4 @@ def loadCSVBase(file: st.runtime.uploaded_file_manager.UploadedFile) -> pd.DataF
     if(file==None):
         raise ValueError
     else:
-        return pd.read_csv(file)
+        return pd.read_csv(file, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
