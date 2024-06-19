@@ -3,7 +3,7 @@ import pandas as pd;
 
 
 
-def loadCSVBase(file: UploadedFile) -> DataFrame:
+def loadCSVBase(file) -> pd.DataFrame:
     """
     @brief Loads a CSV file into a pandas DataFrame.
     

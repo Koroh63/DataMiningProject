@@ -1,5 +1,6 @@
-import pandas as pd;
+from pandas import *
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
 def separateValuesRegression(df : DataFrame, toPredict : str):
     """
@@ -70,9 +71,9 @@ def initTraining(x,y):
 
     return Xtrain,Xtest,ytrain,ytest
 
-def regressionLinear(df : DataFrame){
+def regressionLinear(df : DataFrame, toPredict :str):
     # Separate features and target variable for regression
-    X,Y = separateValuesRegression(df)
+    X,Y = separateValuesRegression(df,toPredict)
         
     # Initialize training and testing data
     Xtrain,Xtest,ytrain,ytest = initTraining(X,Y)
@@ -92,10 +93,8 @@ def regressionLinear(df : DataFrame){
     r2_linear_regression = r2_score(ytest, ypreditLineatRegression)
 
     # Print results
-        print( "-- Linear Regression : ")
-        print("Mean Squared Error - Linear Regression:", mse_linear_regression)
-        print("R2 Score - Linear Regression:", r2_linear_regression)
+    print( "-- Linear Regression : ")
+    print("Mean Squared Error - Linear Regression:", mse_linear_regression)
+    print("R2 Score - Linear Regression:", r2_linear_regression)
 
     return modelLinearRegression, r2_linear_regression, mse_linear_regression
-
-}
