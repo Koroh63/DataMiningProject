@@ -29,6 +29,9 @@ steps:
 trigger:
   event:
     - push
-  commit:
-    include:
-      - '--deploy--'
+  branch:
+    exclude:
+    - prediction
+    - normalisation
+    - addingCICD
+    - clustering
