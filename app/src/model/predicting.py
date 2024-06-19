@@ -1,6 +1,8 @@
 from pandas import *
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error,r2_score
+from sklearn.linear_model import LogisticRegression
 
 def separateValuesRegression(df : DataFrame, toPredict : str):
     """
@@ -98,3 +100,26 @@ def regressionLinear(df : DataFrame, toPredict :str):
     print("R2 Score - Linear Regression:", r2_linear_regression)
 
     return modelLinearRegression, r2_linear_regression, mse_linear_regression
+
+
+def classificationLogisticRegression(df : DataFrame, toPredict :str):
+    # Separate features and target variable for classification
+        X,Y = separateValuesClassification(fullDataSet)
+
+        # Initialize training and testing data
+        Xtrain,Xtest,ytrain,ytest = initTraining(X,Y)
+
+        # Initialize classification models
+        modelLogisticRegression = LogisticRegression(C=5.0, solver='lbfgs', max_iter=10000)
+
+        
+        # Fit classification models
+        modelLogisticRegression.fit(Xtrain,ytrain)
+
+        # Predict using SVC
+        yPreditLogistic= modelLogisticRegression.predict(Xtest)
+
+        # Calculate accuracy score for SVC
+        print('Logistic Regression Accuracy Score : ',accuracy_score(yPreditLogistic,ytest))
+        
+        return modelLogisticRegression, accuracy_score(yPreditLogistic,ytest)
