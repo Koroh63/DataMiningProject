@@ -1,4 +1,3 @@
-PyYAML
 streamlit
 pandas
 numpy
@@ -7,5 +6,4 @@ python-dotenv
 streamlit-pandas-profiling
 pandas-profiling
 pydantic
-pydantic-settings
 ydata-profiling
