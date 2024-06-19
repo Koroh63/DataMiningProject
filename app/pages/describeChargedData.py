@@ -11,7 +11,10 @@ from ydata_profiling import ProfileReport
 
 baseView()
 
+# Affichage de la dataframe
 st.title("Datas loaded")
 st.dataframe(st.session_state.df)
+
+# Affichage des résumés statistique de la DataFrame
 pr = ProfileReport(st.session_state.df)
 st_profile_report(pr)
