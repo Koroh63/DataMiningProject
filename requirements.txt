@@ -1,7 +1,6 @@
 streamlit
 pandas
 numpy
-matplotlib
 python-dotenv
 streamlit-pandas-profiling
 pandas-profiling
