@@ -5,7 +5,6 @@ WORKDIR /app
 # Install necessary dependencies
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install streamlit-pandas-profiling --no-cache-dir
 RUN pip uninstall joblib visions ydata-profiling -y
 RUN pip install visions[type_image_path]>=0.7.5,<0.7.7 --no-cache-dir
 RUN pip install joblib==1.4.2 --no-cache-dir
