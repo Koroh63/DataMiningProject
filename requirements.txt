@@ -3,4 +3,3 @@ python-dotenv>=1.0.1
 pandas
 numba>=0.60.0
 ydata-profiling>=4.5.1
-visions==0.7.6
