@@ -1,5 +1,6 @@
 streamlit
 pandas
+pydantic
+pandas-profiling
 streamlit-pandas-profiling
 ydata-profiling
-pydantic
