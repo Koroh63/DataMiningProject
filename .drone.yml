@@ -37,4 +37,4 @@ trigger:
       - '*'
   commit:
     include:
-      - '--deploy--'`
+      - '--deploy--'
