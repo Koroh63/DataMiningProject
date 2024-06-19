@@ -29,6 +29,12 @@ steps:
 trigger:
   event:
     - push
+  branch:
+    - master
+    - '*'
+  paths:
+    exclude:
+      - '*'
   commit:
     include:
-      - '--deploy--'
+      - '--deploy--'`
