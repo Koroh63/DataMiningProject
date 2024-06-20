@@ -10,11 +10,12 @@ def checkTypePrediction(df,toPredict : str ):
     else:
         return regressionLinear(df,toPredict=toPredict)
 
-def transformData(df:DataFrame):
+def transformData(df:DataFrame, toPredict : str):
     for columnN in range(len(df.dtypes)):
-        if(df.dtypes[columnN]=='object'):
-            type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
-            df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
+        if(df.columns[columnN]!=toPredict):
+            if(df.dtypes[columnN]=='object'):
+                type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
+                df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
     return df
 
 def separateValuesRegression(df : DataFrame, toPredict : str):
@@ -87,7 +88,7 @@ def initTraining(x,y):
     return Xtrain,Xtest,ytrain,ytest
 
 def regressionLinear(df : DataFrame, toPredict :str):
-    df = transformData(df)
+    df = transformData(df,toPredict=toPredict)
     # Separate features and target variable for regression
     X,Y = separateValuesRegression(df,toPredict)
         
@@ -117,7 +118,7 @@ def regressionLinear(df : DataFrame, toPredict :str):
 
 
 def classificationLogisticRegression(df : DataFrame, toPredict :str):
-        df = transformData(df)
+        df = transformData(df,toPredict=toPredict)
     # Separate features and target variable for classification
         X,Y = separateValuesClassification(df,toPredict=toPredict)
 
