@@ -10,6 +10,61 @@ def checkTypePrediction(df,toPredict : str ):
     else:
         return regressionLinear(df,toPredict=toPredict)
 
+def fill_missing_values(df: DataFrame, column_to_fill: str, model):
+    """
+    Remplit les valeurs manquantes d'une colonne d'un DataFrame en utilisant un modèle de régression.
+
+    Paramètres:
+    df (pd.DataFrame): Le DataFrame d'entrée.
+    column_to_fill (str): Le nom de la colonne à remplir.
+    model: Le modèle de régression.
+
+    Retours:
+    pd.DataFrame: Le DataFrame avec les valeurs manquantes remplies.
+    """
+    # Séparer les lignes avec et sans valeurs manquantes
+    df_filled,df_missing = split_dataframe_on_column(df,column_to_fill)
+
+    if df_missing.empty:
+        return df
+    
+    # Séparer les caractéristiques et la cible
+    X_train = df_filled.drop(columns=[column_to_fill])
+    y_train = df_filled[column_to_fill]
+    X_missing = df_missing.drop(columns=[column_to_fill])
+    
+    # Vérifier que les colonnes de X_train et X_missing sont les mêmes
+    if not (X_train.columns == X_missing.columns).all():
+        raise ValueError("Les colonnes des données d'entraînement et des données avec valeurs manquantes ne correspondent pas.")
+    
+    # Prédire les valeurs manquantes
+    y_missing_pred = model.predict(X_missing)
+    
+    # Remplir les valeurs manquantes avec les prédictions
+    df.loc[df[column_to_fill].isna(), column_to_fill] = y_missing_pred
+    
+    return df
+
+def split_dataframe_on_column(df: DataFrame, column_name: str):
+    """
+    Sépare un DataFrame en deux DataFrames basés sur la colonne spécifiée.
+
+    Paramètres:
+    df (pd.DataFrame): Le DataFrame d'entrée.
+    column_name (str): Le nom de la colonne sur laquelle séparer le DataFrame.
+
+    Retours:
+    Tuple[pd.DataFrame, pd.DataFrame]: Deux DataFrames, le premier avec les lignes où la colonne est remplie,
+                                        le second avec les lignes où la colonne est vide.
+    """
+    if column_name not in df.columns:
+        raise ValueError(f"La colonne '{column_name}' n'existe pas dans le DataFrame.")
+    
+    df_filled = df[df[column_name].notna()]
+    df_empty = df[df[column_name].isna()]
+    
+    return df_filled, df_empty
+
 def transformData(df:DataFrame, toPredict : str):
     for columnN in range(len(df.dtypes)):
         if(df.columns[columnN]!=toPredict):
