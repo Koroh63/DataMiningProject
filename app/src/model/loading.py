@@ -1,9 +1,9 @@
-import streamlit as st;
+
 import pandas as pd;
 
 
 
-def loadCSVBase(file: UploadedFile) -> DataFrame:
+def loadCSVBase(file):
     """
     @brief Loads a CSV file into a pandas DataFrame.
     
