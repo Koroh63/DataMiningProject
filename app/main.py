@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from src.model import norm_stand as norm
 from src.model import loading
-from src.model.clustering import clusteringKMeans, bestApport, bestNbCluster, clusteringHierarchique, buildBestDataSetRep
+from src.model.clustering import clusteringKMeans, bestApport, bestNbCluster, clusteringHierarchique, buildBestDataSetRep, dendrogramme
 
 if __name__ == "__main__":
     dataset = loading.loadCSVBase('./trees.csv');
@@ -19,3 +19,5 @@ if __name__ == "__main__":
 
     clusteringKMeans(X_principal, bestNbCluster) # cluster k-mean
     clusteringHierarchique(X_principal, bestColumns, bestNbCluster) # cluster hierarchique
+
+    dendrogramme(X_principal)

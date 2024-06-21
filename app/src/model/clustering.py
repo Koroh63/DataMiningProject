@@ -1,4 +1,5 @@
 
+import numpy as np
 from src.model import norm_stand as norm
 import matplotlib.pyplot as plt
 from kneed import KneeLocator
@@ -61,6 +62,7 @@ def bestNbCluster(datasetStandard):
     plt.xticks(range(1, 11))
     plt.xlabel("Nombre de Clusters")
     plt.ylabel("SSE")
+    plt.title("Elbow Method")
     plt.show()
 
     kl = KneeLocator(range(1, 11), sse, curve="convex", direction="decreasing")
@@ -77,7 +79,7 @@ def buildBestDataSetRep(datasetStandard, bestColumns):
     return X_principal
 
 def clusteringKMeans(datasetStandard, bestNbCluster): 
-    # Application du KMeans avec le nombre optimal de clusters
+    # Application du KMeans avec le nombre de clusters
     kmeans = KMeans(n_clusters=bestNbCluster, random_state=0, n_init='auto')
     kmeans.fit(datasetStandard)
 
@@ -85,20 +87,52 @@ def clusteringKMeans(datasetStandard, bestNbCluster):
     kmeans_silhouette = silhouette_score(datasetStandard, kmeans.labels_).round(2)
     print(f"Score de silhouette : {kmeans_silhouette}")
 
-    # Application du KMeans sur les données d'entraînement
-    kmeans.fit(datasetStandard)
+    # calcul des coordonnées des centres des clusters
+    print(f"Centre des clusters : {kmeans.cluster_centers_}")
 
-    # Visualisation des clusters sur les données d'entraînement
+    # Calcul du nombre de points par cluster
+    counts = np.bincount(kmeans.labels_)
+    for cluster_idx, count in enumerate(counts):
+        print(f"Cluster {cluster_idx}: {count} points")
+
+    # Visualisation des clusters sur les données
     sns.scatterplot(data = datasetStandard, x = (datasetStandard.columns)[0], y = (datasetStandard.columns)[1], hue = kmeans.labels_)
+    plt.xlabel((datasetStandard.columns)[0])
+    plt.ylabel((datasetStandard.columns)[1])
+    plt.title('Clustering KMeans')
     plt.show()
 
 def clusteringHierarchique(datasetStandard, bestColumns, bestNbCluster):
-    ac2 = AgglomerativeClustering(n_clusters = bestNbCluster) 
-    plt.figure(figsize =(6, 6))
-    plt.scatter(datasetStandard[bestColumns[0]], datasetStandard[bestColumns[1]], c = ac2.fit_predict(datasetStandard), cmap ='rainbow') 
+    # Application du AgglomerativeClustering avec le nombre de clusters
+    ac2 = AgglomerativeClustering(n_clusters=bestNbCluster) 
+    labels = ac2.fit_predict(datasetStandard)
+
+    # Calcul du score de silhouette
+    silhouette_avg = silhouette_score(datasetStandard, labels).round(2)
+    print(f"Score de silhouette : {silhouette_avg}")
+
+    # Calcul des coordonnées des centres des clusters
+    counts = np.bincount(labels)
+    for cluster_idx, count in enumerate(counts):
+        print(f"Cluster {cluster_idx}: {count} points")
+
+    # Calcul des centres de gravité des clusters
+    centers = pd.DataFrame(datasetStandard).groupby(labels).mean()
+    print(f"Centre des clusters :\n{centers}")
+
+    # Visualisation des clusters sur les données
+    plt.figure(figsize=(6, 6))
+    plt.scatter(datasetStandard[bestColumns[0]], datasetStandard[bestColumns[1]], c=labels, cmap='rainbow')
+    plt.xlabel(bestColumns[0])
+    plt.ylabel(bestColumns[1])
+    plt.title('Clustering Hierarchique')
     plt.show()
 
+
+def dendrogramme(datasetStandard):
+    # Affichage du dendrogramme du dataset
     plt.figure(figsize =(8, 8)) 
     plt.title('Visualising the data') 
     Dendrogram = shc.dendrogram((shc.linkage(datasetStandard, method ='ward')))
+    plt.title('Dendrogramme du dataset')
     plt.show() 
