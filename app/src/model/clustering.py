@@ -2,14 +2,15 @@
 from src.model import norm_stand as norm
 import matplotlib.pyplot as plt
 from kneed import KneeLocator
-from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 import pandas as pd
+import scipy.cluster.hierarchy as shc 
 
-def clustering(dataset, bestColumns): 
+def bestNbCluster(dataset):
     datasetStandard = norm.standardisationZScore(dataset)
 
     # Paramètres du modèle KMeans
@@ -37,9 +38,13 @@ def clustering(dataset, bestColumns):
 
     kl = KneeLocator(range(1, 11), sse, curve="convex", direction="decreasing")
     print(f"Nombre optimal de clusters : {kl.elbow}")
+    return kl.elbow
 
+def clusteringKMeans(dataset, bestColumns, bestNbCluster): 
+
+    datasetStandard = norm.standardisationZScore(dataset)
     # Application du KMeans avec le nombre optimal de clusters
-    kmeans = KMeans(n_clusters=kl.elbow, random_state=0, n_init='auto')
+    kmeans = KMeans(n_clusters=bestNbCluster, random_state=0, n_init='auto')
     kmeans.fit(datasetStandard)
 
     # Évaluation du clustering avec le score de silhouette
@@ -59,10 +64,23 @@ def clustering(dataset, bestColumns):
     sns.scatterplot(data = X_train, x = bestColumns[0], y = bestColumns[1], hue = kmeans.labels_)
     plt.show()
 
+def clusteringHierarchique(dataset, bestColumns, bestNbCluster):
+    dataset = dataset[[bestColumns[0], bestColumns[1]]]
+    datasetStandard = norm.standardisationZScore(dataset)
+    ac2 = AgglomerativeClustering(n_clusters = bestNbCluster) 
+    plt.figure(figsize =(6, 6)) 
+    print(datasetStandard);
+    plt.scatter(datasetStandard[0], datasetStandard[1], c = ac2.fit_predict(bestColumns), cmap ='rainbow') 
+    plt.show()
+
+    plt.figure(figsize =(8, 8)) 
+    plt.title('Visualising the data') 
+    Dendrogram = shc.dendrogram((shc.linkage(datasetStandard, method ='ward'))) 
+    plt.axhline(y=8, color='r', linestyle='--')
+    plt.show() 
 
 
-
-def apport(dataset):
+def bestApport(dataset):
     if 'Index' in dataset.columns:
         dataset = dataset.drop(columns=['Index'])
 
