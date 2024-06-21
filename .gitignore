@@ -176,5 +176,6 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 app/sklearn-env
+sklearn-env
 
 app/test.py
