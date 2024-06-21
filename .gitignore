@@ -177,3 +177,5 @@ pyrightconfig.json
 
 app/sklearn-env
 sklearn-env
+
+app/test.py

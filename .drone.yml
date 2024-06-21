@@ -29,3 +29,9 @@ steps:
 trigger:
   event:
     - push
+  branch:
+    exclude:
+    - prediction
+    - normalisation
+    - addingCICD
+    - clustering
