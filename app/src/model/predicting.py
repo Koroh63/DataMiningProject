@@ -1,9 +1,11 @@
+import pandas
 from pandas import *
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, accuracy_score
 from sklearn.linear_model import LogisticRegression
 
+import matplotlib.pyplot as plt
 def checkTypePrediction(df, toPredict: str):
     """
     @brief Determines the type of prediction based on the target column's data type.
@@ -20,7 +22,7 @@ def checkTypePrediction(df, toPredict: str):
     else:
         return regressionLinear(df, toPredict=toPredict)
 
-def fill_missing_values(df: DataFrame, column_to_fill: str, model):
+def fill_missing_values(df: DataFrame, toPredict: str, model):
     """
     @brief Fills missing values in a specified column using a regression model.
 
@@ -29,27 +31,45 @@ def fill_missing_values(df: DataFrame, column_to_fill: str, model):
     and fills them in.
 
     @param df The input DataFrame.
-    @param column_to_fill The name of the column to fill.
+    @param toPredict The name of the column to fill.
     @param model The regression model used for prediction.
     @return DataFrame with missing values filled.
     """
-    df_filled, df_missing = split_dataframe_on_column(df, column_to_fill)
+    df_filled, df_missing = split_dataframe_on_column(df, toPredict)
 
     if df_missing.empty:
         return df
-    
-    X_train = df_filled.drop(columns=[column_to_fill])
-    y_train = df_filled[column_to_fill]
-    X_missing = df_missing.drop(columns=[column_to_fill])
+    relevant_features = select_highly_correlated_features(df, toPredict)
+    X_train = df_filled[relevant_features]
+    y_train = df_filled[toPredict]
+    X_missing = df_missing[relevant_features]
     
     if not (X_train.columns == X_missing.columns).all():
         raise ValueError("The columns of training data and data with missing values do not match.")
     
     y_missing_pred = model.predict(X_missing)
     
-    df.loc[df[column_to_fill].isna(), column_to_fill] = y_missing_pred
+    df.loc[df[toPredict].isna(), toPredict] = y_missing_pred
     
     return df
+
+def select_highly_correlated_features(df: DataFrame, toPredict: str, threshold: float = 0.5):
+    """
+    @brief Selects features highly correlated with the target column.
+    
+    This function calculates the correlation of all columns with the target column and selects
+    columns with an absolute correlation greater than the specified threshold.
+    
+    @param df The input DataFrame.
+    @param toPredict The name of the target column.
+    @param threshold The correlation threshold (default is 0.8).
+    @return List of columns that are highly correlated with the target column.
+    """
+    correlation_matrix = df.corr()
+    target_correlation = correlation_matrix[toPredict]
+    relevant_features = target_correlation[target_correlation.abs() > threshold].index.tolist()
+    relevant_features.remove(toPredict)
+    return relevant_features
 
 def split_dataframe_on_column(df: DataFrame, column_name: str):
     """
@@ -142,6 +162,24 @@ def initTraining(x, y):
 
     return Xtrain, Xtest, ytrain, ytest
 
+def visualize_linear_regression(y_true, y_pred):
+    """
+    @brief Visualizes the results of a linear regression model using matplotlib's plot function.
+    
+    This function creates a scatter plot of the true values against the predicted values
+    and adds a reference line (y=x) to show the ideal prediction.
+    
+    @param y_true The true values of the target variable.
+    @param y_pred The predicted values from the regression model.
+    """
+    plt.figure(figsize=(10, 6))
+    plt.scatter(y_true, y_pred, alpha=0.5)
+    plt.plot([min(y_true), max(y_true)], [min(y_true), max(y_true)], color='red', linestyle='--')
+    plt.xlabel('True Values')
+    plt.ylabel('Predicted Values')
+    plt.title('Linear Regression: True vs Predicted Values')
+    plt.savefig('assets/plt')
+
 def regressionLinear(df: DataFrame, toPredict: str):
     """
     @brief Performs linear regression on the dataset.
@@ -152,6 +190,8 @@ def regressionLinear(df: DataFrame, toPredict: str):
     @param toPredict The name of the target column.
     @return The trained linear regression model and its performance metrics (R2 score and Mean Squared Error).
     """
+    relevant_features = select_highly_correlated_features(df, toPredict)
+    df = df[relevant_features + [toPredict]]
     df = transformData(df, toPredict=toPredict)
     X, Y = separateValuesRegression(df, toPredict)
         
@@ -170,7 +210,28 @@ def regressionLinear(df: DataFrame, toPredict: str):
     print("Mean Squared Error - Linear Regression:", mse_linear_regression)
     print("R2 Score - Linear Regression:", r2_linear_regression)
 
+    visualize_linear_regression(ytest, ypreditLineatRegression)
+    
     return modelLinearRegression, r2_linear_regression, mse_linear_regression
+
+def visualize_logistic_regression(y_true, y_pred):
+    """
+    @brief Visualizes the results of a logistic regression model using matplotlib's plot function.
+    
+    This function creates a scatter plot of the true values against the predicted values
+    for the logistic regression model.
+    
+    @param y_true The true values of the target variable.
+    @param y_pred The predicted values from the logistic regression model.
+    """
+    plt.figure(figsize=(10, 6))
+    plt.scatter(range(len(y_true)), y_true, alpha=0.5, label='True Values')
+    plt.scatter(range(len(y_true)), y_pred, alpha=0.5, label='Predicted Values')
+    plt.xlabel('Sample Index')
+    plt.ylabel('Value')
+    plt.title('Logistic Regression: True vs Predicted Values')
+    plt.legend()
+    plt.savefig('assets/plt')
 
 def classificationLogisticRegression(df: DataFrame, toPredict: str):
     """
@@ -182,6 +243,8 @@ def classificationLogisticRegression(df: DataFrame, toPredict: str):
     @param toPredict The name of the target column.
     @return The trained logistic regression model and its performance metric (accuracy score).
     """
+    relevant_features = select_highly_correlated_features(df, toPredict)
+    df = df[relevant_features + [toPredict]]
     df = transformData(df, toPredict=toPredict)
     X, Y = separateValuesClassification(df, toPredict=toPredict)
 
@@ -193,6 +256,9 @@ def classificationLogisticRegression(df: DataFrame, toPredict: str):
 
     yPreditLogistic = modelLogisticRegression.predict(Xtest)
 
+
     print('Logistic Regression Accuracy Score:', accuracy_score(yPreditLogistic, ytest))
+
+    yPreditLogistic = modelLogisticRegression.predict(Xtest)
     
     return modelLogisticRegression, accuracy_score(yPreditLogistic, ytest)

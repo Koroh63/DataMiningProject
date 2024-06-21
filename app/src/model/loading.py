@@ -37,10 +37,14 @@ def loadCSVBase(file) -> pd.DataFrame:
     else:
         df = pd.read_csv(file, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
         
+        
         # Clean column names
+        
         df.columns = [remove_outer_spaces_and_quotes(col) for col in df.columns]
         
         # Remove outer spaces and quotes from all cells
         df = df.applymap(remove_outer_spaces_and_quotes)
+        
+        df = df.drop(columns=[col for col in df.columns if col.lower() in ['index', 'id']], errors='ignore')
         
         return df
