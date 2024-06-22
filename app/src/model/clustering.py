@@ -144,7 +144,7 @@ def clusteringHierarchique(datasetStandard, bestColumns, bestNbCluster):
     silhouette_avg = silhouette_score(datasetStandard, labels).round(2)
     yield f"Score de silhouette : {silhouette_avg}  \n"
 
-    # Calcul des coordonnées des centres des clusters
+    # Calcul du nombre de points pour chaque cluster
     counts = np.bincount(labels)
     for cluster_idx, count in enumerate(counts):
         yield f"Cluster {cluster_idx}: {count} points  \n"

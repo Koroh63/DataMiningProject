@@ -68,3 +68,5 @@ if optionCol is not None:
             st.dataframe(dfFilled)
             columns = select_highly_correlated_features(dfFilled, optionCol)
             st.write(f"List of columns that are highly correlated with the target column are {columns}")
+            st.download_button(label="Download predicted file", data=dfFilled.to_csv(index=False).encode('utf-8'),
+                               file_name='predictedData.csv', mime='text/csv')
