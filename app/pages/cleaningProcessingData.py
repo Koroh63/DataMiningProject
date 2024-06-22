@@ -14,7 +14,7 @@ optionFill = st.selectbox("Fill missing value method.",
                           )
 
 optionNorm = st.selectbox("Fill missing value method.",
-                          ["MinMax", "MaxAbs", "Robust", "ZScore"],
+                          ["Nothing", "MinMax", "MaxAbs", "Robust", "ZScore"],
                           index=None,
                           placeholder="Select normalize data method...",
                           )
@@ -38,12 +38,19 @@ if st.button("Normalize data", disabled=(optionNorm is None or optionFill is Non
     match optionNorm:
         case "MinMax":
             st.session_state.df = normalizeMinMax(st.session_state.df)
+            st.session_state.initialDf = normalizeMinMax(st.session_state.initialDf)
         case "MaxAbs":
             st.session_state.df = normalizeMaxAbs(st.session_state.df)
+            st.session_state.initialDf = normalizeMaxAbs(st.session_state.initialDf)
         case "Robust":
             st.session_state.df = normalizeRobust(st.session_state.df)
+            st.session_state.initialDf = normalizeRobust(st.session_state.initialDf)
         case "ZScore":
             st.session_state.df = standardisationZScore(st.session_state.df)
+            st.session_state.initialDf = standardisationZScore(st.session_state.initialDf)
+
     st.session_state.df = pd.DataFrame(st.session_state.df, columns=colums)
+    st.session_state.initialDf = pd.DataFrame(st.session_state.initialDf, columns=colums)
+
     st.session_state.state = 2
     st.switch_page("pages/visualizeData.py")

@@ -1,4 +1,3 @@
-
 from sklearn.preprocessing import MinMaxScaler, scale, StandardScaler, MaxAbsScaler, RobustScaler
 
 # Redimension des données entre 0 et 1
