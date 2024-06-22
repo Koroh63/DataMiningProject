@@ -20,8 +20,12 @@ if len(optionFill) == 2:
 
     X_principal = buildBestDataSetRep(datasetStandard, optionFill)  # création du dataset avec seultement les deux colonnes
     bestNbCluster, f = bestNbCluster(X_principal)  # choix du meilleur nombrede cluster
+    st.write("Best cluster number with Kmeans is ", bestNbCluster)
     st.pyplot(f)
-    st.write("Best cluster number is ", bestNbCluster)
+
+    bestNbClusterHiAsc, f = bestNbClusterHiAsc(X_principal)  # choix du meilleur nombrede cluster
+    st.write(f"Best cluster number with hierarchic ascendant is : ", bestNbClusterHiAsc)
+    st.pyplot(f)
     number = st.number_input("Choose a number of cluster", value=bestNbCluster, placeholder="Type a number...", min_value=2, step=1)
 
     optionClustering = st.selectbox("Select clustering method.",

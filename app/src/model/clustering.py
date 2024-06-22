@@ -9,8 +9,9 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 import pandas as pd
-import scipy.cluster.hierarchy as shc 
-
+import scipy.cluster.hierarchy as shc
+from scipy.cluster.hierarchy import linkage, fcluster
+from scipy.spatial.distance import pdist
 
 def bestApport(dataset_standard):
 
@@ -67,6 +68,37 @@ def bestNbCluster(datasetStandard):
     kl = KneeLocator(range(1, 11), sse, curve="convex", direction="decreasing")
     print(f"Nombre optimal de clusters : {kl.elbow}")
     return kl.elbow, f
+
+def bestNbClusterHiAsc(datasetStandard):
+    # Calculer les distances entre chaque point
+    dist_matrix = pdist(datasetStandard)
+
+    # Clustering hiérarchique ascendant
+    Z = linkage(dist_matrix, method='ward')
+
+    # Extraire les distances de fusion des 10 dernières fusions
+    # La colonne 2 de la matrice de liaison (Z) contient les distances de fusion
+    last = Z[-10:, 2]
+
+    # Inverser l'ordre des distances pour avoir les plus grandes distances en premier
+    last_rev = last[::-1]
+
+    # Générer une séquence d'indices correspondant au nombre de clusters
+    # Ici, nous avons 10 dernières distances de fusion, donc les indices seront de 1 à 10
+    idxs = np.arange(1, len(last) + 1)
+
+    # Utilisation de la méthode du coude pour trouver le nombre optimal de clusters
+    f = plt.figure()
+    plt.plot(idxs, last_rev)
+    plt.title("Méthode du coude pour déterminer le nombre optimal de clusters")
+    plt.xlabel("Nombre de clusters")
+    plt.ylabel("Distance de fusion")
+    plt.show()
+
+    kl = KneeLocator(idxs, last_rev, curve="convex", direction="decreasing")
+    optimal_clusters = kl.elbow
+
+    return optimal_clusters, f
 
 def buildBestDataSetRep(datasetStandard, bestColumns):
     pca = PCA()
