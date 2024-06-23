@@ -20,6 +20,23 @@ def remove_outer_spaces_and_quotes(s: str) -> str:
         return ' '.join(s.split())  # Remove multiple spaces
     return s
 
+def detect_separator(file):
+    """
+    @brief Detects the separator used in a CSV file.
+    
+    This function reads the first few lines of a CSV file to detect the separator.
+    
+    @param file The uploaded CSV file.
+    @return The detected separator.
+    
+    @exception None
+    """
+    sample = file.read(2048).decode('utf-8')
+    file.seek(0)  # Reset file pointer to the beginning
+    sniffer = csv.Sniffer()
+    dialect = sniffer.sniff(sample)
+    return dialect.delimiter
+
 def loadCSVBase(file) -> pd.DataFrame:
     """
     @brief Loads a CSV file into a pandas DataFrame.
@@ -35,7 +52,9 @@ def loadCSVBase(file) -> pd.DataFrame:
     if file is None:
         raise ValueError("No file provided")
     else:
-        df = pd.read_csv(file, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
+        separator = detect_separator(file)
+        
+        df = pd.read_csv(file,sep=separator, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
         
         
         # Clean column names
