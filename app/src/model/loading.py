@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import csv
+import chardet
 
 def remove_outer_spaces_and_quotes(s: str) -> str:
     """
@@ -21,22 +22,30 @@ def remove_outer_spaces_and_quotes(s: str) -> str:
         return ' '.join(s.split())  # Remove multiple spaces
     return s
 
-def detect_separator(file):
+def detect_separator_and_encoding(file):
     """
-    @brief Detects the separator used in a CSV file.
+    @brief Detects the separator and encoding used in a CSV file.
     
-    This function reads the first few lines of a CSV file to detect the separator.
+    This function reads the first few lines of a CSV file to detect the separator and encoding.
     
     @param file The uploaded CSV file.
-    @return The detected separator.
+    @return The detected separator and encoding.
     
     @exception None
     """
-    sample = file.read(2048).decode('utf-8')
+    raw_data = file.read(2048)
     file.seek(0)  # Reset file pointer to the beginning
+    
+    # Detect encoding
+    result = chardet.detect(raw_data)
+    encoding = result['encoding']
+    
+    # Detect separator
+    sample = raw_data.decode(encoding)
     sniffer = csv.Sniffer()
     dialect = sniffer.sniff(sample)
-    return dialect.delimiter
+    
+    return dialect.delimiter, encoding
 
 def loadCSVBase(file) -> pd.DataFrame:
     """
@@ -53,18 +62,19 @@ def loadCSVBase(file) -> pd.DataFrame:
     if file is None:
         raise ValueError("No file provided")
     else:
-        separator = detect_separator(file)
+        # Detect the separator and encoding
+        separator, encoding = detect_separator_and_encoding(file)
         
-        df = pd.read_csv(file,sep=separator, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
-        
+        # Load the CSV file into a DataFrame
+        df = pd.read_csv(file, sep=separator, encoding=encoding, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
         
         # Clean column names
-        
         df.columns = [remove_outer_spaces_and_quotes(col) for col in df.columns]
         
         # Remove outer spaces and quotes from all cells
         df = df.applymap(remove_outer_spaces_and_quotes)
         
+        # Remove columns named "Index", "index" or "id"
         df = df.drop(columns=[col for col in df.columns if col.lower() in ['index', 'id']], errors='ignore')
         
         return df
