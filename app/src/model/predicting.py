@@ -65,6 +65,7 @@ def select_highly_correlated_features(df: DataFrame, toPredict: str, threshold: 
     @param threshold The correlation threshold (default is 0.8).
     @return List of columns that are highly correlated with the target column.
     """
+    df = transformDataAll(df)
     correlation_matrix = df.corr()
     target_correlation = correlation_matrix[toPredict]
     relevant_features = target_correlation[target_correlation.abs() > threshold].index.tolist()
@@ -108,6 +109,22 @@ def transformData(df: DataFrame, toPredict: str):
             if df.dtypes[columnN] == 'object':
                 type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
                 df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
+    return df
+
+def transformDataAll(df: DataFrame):
+    """
+    @brief Transforms categorical columns in the DataFrame to numerical values.
+    
+    This function replaces categorical values with numerical codes to prepare the DataFrame 
+    for machine learning models.
+    
+    @param df The input DataFrame.
+    @return Transformed DataFrame with categorical values replaced by numerical codes.
+    """
+    for columnN in range(len(df.dtypes)):
+        if df.dtypes[columnN] == 'object':
+            type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
+            df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
     return df
 
 def separateValuesRegression(df: DataFrame, toPredict: str):

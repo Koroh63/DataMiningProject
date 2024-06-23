@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from src.view.index import baseView
-from src.model.predicting import checkTypePrediction,split_dataframe_on_column,fill_missing_values,select_highly_correlated_features,classificationLogisticRegression,regressionLinear,visualize_linear_regression
+from src.model.predicting import checkTypePrediction,split_dataframe_on_column,fill_missing_values,select_highly_correlated_features,classificationLogisticRegression,regressionLinear,visualize_linear_regression, transformDataAll
 
 baseView()
 
@@ -48,7 +48,8 @@ if optionCol is not None:
                 st.write(f"Mean Squared Error : {b}  \n")
                 st.pyplot(f)
 
-        corr = st.session_state.df.corr()
+        dfCorr = transformDataAll(st.session_state.df)
+        corr = dfCorr.corr()
 
         # Generate a mask for the upper triangle
         mask = np.triu(np.ones_like(corr, dtype=bool))
