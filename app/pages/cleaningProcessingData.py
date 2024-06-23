@@ -24,14 +24,18 @@ if st.button("Normalize data", disabled=(optionNorm is None or optionFill is Non
     match optionFill:
         case "Remove":
             st.session_state.df = removeNullRows(st.session_state.df)
+            st.session_state.initialDf = removeNullRows(st.session_state.initialDf)
         case "Mean":
             st.session_state.df = fillNullByMean(st.session_state.df)
         case "Median":
             st.session_state.df = fillNullByMed(st.session_state.df)
+            st.session_state.initialDf = removeNullRows(st.session_state.initialDf)
         case "Mode":
             st.session_state.df = fillNullByMode(st.session_state.df)
+            st.session_state.initialDf = removeNullRows(st.session_state.initialDf)
         case "KNN":
             st.session_state.df = fillNullByKNN(st.session_state.df)
+            st.session_state.initialDf = removeNullRows(st.session_state.initialDf)
         case "Regression":
             st.session_state.df = fillNullByRegression(st.session_state.df)
 
