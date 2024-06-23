@@ -18,7 +18,7 @@ initialDataset = st.session_state.initialDf
 optionCol = st.selectbox("Select column to predict.",
                          list(dataset),
                          index=None,
-                         placeholder="Select normalize data method...",
+                         placeholder="Select column to predict...",
                          )
 
 if optionCol is not None:
@@ -32,7 +32,7 @@ if optionCol is not None:
     optionPredict = st.selectbox("Select predicting methode.",
                                  precdictChoice,
                                  index=precdictChoice.index(recommendedPredict) ,
-                                 placeholder="Select normalize data method...",
+                                 placeholder="Select predicting method...",
                                  )
 
     if optionPredict is not None:
@@ -48,7 +48,7 @@ if optionCol is not None:
                 st.write(f"Mean Squared Error : {b}  \n")
                 st.pyplot(f)
 
-        corr = dfFull.corr()
+        corr = st.session_state.df.corr()
 
         # Generate a mask for the upper triangle
         mask = np.triu(np.ones_like(corr, dtype=bool))

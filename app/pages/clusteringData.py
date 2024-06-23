@@ -8,7 +8,7 @@ datasetStandard = st.session_state.df
 bestColumns, explained_variance = bestApport(datasetStandard)  # choix des 2 meilleurs colonnes qui représentent au mieux la variance
 
 st.write(f"Les deux colonnes avec les variances les plus élevées sont : {bestColumns}")
-st.write("Représentation de la variance pour les clusters : ", explained_variance[0] + explained_variance[1])
+st.write("Représentation de la variance pour les clusters : ", format(explained_variance[0] + explained_variance[1], ".0%"))
 
 # st.write("Best columns are '" + bestColumns[0] + "' and '" + bestColumns[1] + "'")
 optionFill = st.multiselect("Select 2 columns to get best cluster number.",
