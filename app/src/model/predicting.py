@@ -18,9 +18,9 @@ def checkTypePrediction(df, toPredict: str):
     @return The trained model and performance metrics.
     """
     if df[toPredict].dtypes == 'object':
-        return classificationLogisticRegression(df, toPredict=toPredict)
+        return "classificationLogistic"  # classificationLogisticRegression(df, toPredict=toPredict)
     else:
-        return regressionLinear(df, toPredict=toPredict)
+        return "regressionLinear"  # regressionLinear(df, toPredict=toPredict)
 
 def fill_missing_values(df: DataFrame, toPredict: str, model):
     """
@@ -65,6 +65,7 @@ def select_highly_correlated_features(df: DataFrame, toPredict: str, threshold: 
     @param threshold The correlation threshold (default is 0.8).
     @return List of columns that are highly correlated with the target column.
     """
+    df = transformDataAll(df)
     correlation_matrix = df.corr()
     target_correlation = correlation_matrix[toPredict]
     relevant_features = target_correlation[target_correlation.abs() > threshold].index.tolist()
@@ -108,6 +109,22 @@ def transformData(df: DataFrame, toPredict: str):
             if df.dtypes[columnN] == 'object':
                 type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
                 df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
+    return df
+
+def transformDataAll(df: DataFrame):
+    """
+    @brief Transforms categorical columns in the DataFrame to numerical values.
+    
+    This function replaces categorical values with numerical codes to prepare the DataFrame 
+    for machine learning models.
+    
+    @param df The input DataFrame.
+    @return Transformed DataFrame with categorical values replaced by numerical codes.
+    """
+    for columnN in range(len(df.dtypes)):
+        if df.dtypes[columnN] == 'object':
+            type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
+            df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
     return df
 
 def separateValuesRegression(df: DataFrame, toPredict: str):
@@ -172,13 +189,13 @@ def visualize_linear_regression(y_true, y_pred):
     @param y_true The true values of the target variable.
     @param y_pred The predicted values from the regression model.
     """
-    plt.figure(figsize=(10, 6))
+    f = plt.figure(figsize=(10, 6))
     plt.scatter(y_true, y_pred, alpha=0.5)
     plt.plot([min(y_true), max(y_true)], [min(y_true), max(y_true)], color='red', linestyle='--')
     plt.xlabel('True Values')
     plt.ylabel('Predicted Values')
     plt.title('Linear Regression: True vs Predicted Values')
-    plt.savefig('assets/plt')
+    return f
 
 def regressionLinear(df: DataFrame, toPredict: str):
     """
@@ -210,9 +227,9 @@ def regressionLinear(df: DataFrame, toPredict: str):
     print("Mean Squared Error - Linear Regression:", mse_linear_regression)
     print("R2 Score - Linear Regression:", r2_linear_regression)
 
-    visualize_linear_regression(ytest, ypreditLineatRegression)
+    f = visualize_linear_regression(ytest, ypreditLineatRegression)
     
-    return modelLinearRegression, r2_linear_regression, mse_linear_regression
+    return modelLinearRegression, r2_linear_regression, mse_linear_regression, f
 
 def visualize_logistic_regression(y_true, y_pred):
     """
@@ -224,14 +241,14 @@ def visualize_logistic_regression(y_true, y_pred):
     @param y_true The true values of the target variable.
     @param y_pred The predicted values from the logistic regression model.
     """
-    plt.figure(figsize=(10, 6))
+    f = plt.figure(figsize=(10, 6))
     plt.scatter(range(len(y_true)), y_true, alpha=0.5, label='True Values')
     plt.scatter(range(len(y_true)), y_pred, alpha=0.5, label='Predicted Values')
     plt.xlabel('Sample Index')
     plt.ylabel('Value')
     plt.title('Logistic Regression: True vs Predicted Values')
     plt.legend()
-    plt.savefig('assets/plt')
+    return f
 
 def classificationLogisticRegression(df: DataFrame, toPredict: str):
     """
@@ -260,5 +277,6 @@ def classificationLogisticRegression(df: DataFrame, toPredict: str):
     print('Logistic Regression Accuracy Score:', accuracy_score(yPreditLogistic, ytest))
 
     yPreditLogistic = modelLogisticRegression.predict(Xtest)
-    
-    return modelLogisticRegression, accuracy_score(yPreditLogistic, ytest)
+
+    f = visualize_logistic_regression(ytest, yPreditLogistic)
+    return modelLogisticRegression, accuracy_score(yPreditLogistic, ytest), f

@@ -2,6 +2,24 @@ import pandas as pd
 from sklearn.impute import KNNImputer
 from sklearn.linear_model import LinearRegression
 
+
+def transformData(df: pd.DataFrame):
+    """
+    @brief Transforms categorical columns in the DataFrame to numerical values.
+
+    This function replaces categorical values with numerical codes to prepare the DataFrame
+    for machine learning models.
+
+    @param df The input DataFrame.
+    @param toPredict The name of the target column.
+    @return Transformed DataFrame with categorical values replaced by numerical codes.
+    """
+    for columnN in range(len(df.dtypes)):
+        if df.dtypes[columnN] == 'object':
+            type_mapping = {type_str: idx + 1 for idx, type_str in enumerate(df[df.columns[columnN]].unique())}
+            df[df.columns[columnN]] = df[df.columns[columnN]].replace(type_mapping)
+    return df
+
 def removeNullRows(df: pd.DataFrame) -> pd.DataFrame:
     """
     @brief Removes rows with any null values from the DataFrame.
