@@ -8,8 +8,8 @@ from src.model.norm_stand import *
 baseView()
 
 optionsIgnoredColumns = st.multiselect("Select colum to ignore/delete.",
-                                   list(st.session_state.df),
-                                   )
+                                       list(st.session_state.df),
+                                       )
 
 optionFill = st.selectbox("Fill missing value method.",
                           ["Remove", "Mean", "Median", "Mode", "KNN", "Regression"],

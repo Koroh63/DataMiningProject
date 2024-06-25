@@ -6,7 +6,7 @@ import seaborn as sns
 
 baseView()
 
-plotType = st.radio("What's your favorite movie genre",
+plotType = st.radio("Select visualization method",
                     ["Histograms", "Boxplot", "Lineplot"],
                     )
 
