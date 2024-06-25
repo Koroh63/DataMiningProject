@@ -75,6 +75,6 @@ def loadCSVBase(file) -> pd.DataFrame:
         df = df.applymap(remove_outer_spaces_and_quotes)
         
         # Remove columns named "Index", "index" or "id"
-        df = df.drop(columns=[col for col in df.columns if col.lower() in ['index', 'id','subject#']], errors='ignore')
+        # df = df.drop(columns=[col for col in df.columns if col.lower() in ['index', 'id','subject#']], errors='ignore')
         
         return df
