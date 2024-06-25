@@ -53,24 +53,25 @@ def fill_missing_values(df: DataFrame, toPredict: str, model):
     
     return df
 
-def select_highly_correlated_features(df: DataFrame, toPredict: str, threshold: float = 0.5):
+def select_highly_correlated_features(df: DataFrame, toPredict: str, top_n: int = 2):
     """
-    @brief Selects features highly correlated with the target column.
+    @brief Selects the top N features highly correlated with the target column.
     
     This function calculates the correlation of all columns with the target column and selects
-    columns with an absolute correlation greater than the specified threshold.
+    the top N columns with the highest absolute correlation.
     
     @param df The input DataFrame.
     @param toPredict The name of the target column.
-    @param threshold The correlation threshold (default is 0.8).
+    @param top_n The number of top correlated features to select (default is 2).
     @return List of columns that are highly correlated with the target column.
     """
     df = transformDataAll(df)
     correlation_matrix = df.corr()
     target_correlation = correlation_matrix[toPredict]
-    relevant_features = target_correlation[target_correlation.abs() > threshold].index.tolist()
-    relevant_features.remove(toPredict)
-    return relevant_features
+    sorted_correlation = target_correlation.abs().sort_values(ascending=False)
+    top_features = sorted_correlation.index[sorted_correlation.index != toPredict][:top_n].tolist()
+    return top_features
+
 
 def split_dataframe_on_column(df: DataFrame, column_name: str):
     """

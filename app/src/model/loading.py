@@ -66,7 +66,7 @@ def loadCSVBase(file) -> pd.DataFrame:
         separator, encoding = detect_separator_and_encoding(file)
         
         # Load the CSV file into a DataFrame
-        df = pd.read_csv(file, sep=separator, encoding=encoding, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
+        df = pd.read_csv(file,encoding=encoding,sep=separator, na_values=['null', 'NULL', 'nan', 'NaN', 'NA', 'na', '', 'N/A', 'n/a', '-', '--', 'None', 'none', '?', 'missing', 'MISSING', '#N/A', 'null_value', 'Not Available'])
         
         # Clean column names
         df.columns = [remove_outer_spaces_and_quotes(col) for col in df.columns]
@@ -75,6 +75,6 @@ def loadCSVBase(file) -> pd.DataFrame:
         df = df.applymap(remove_outer_spaces_and_quotes)
         
         # Remove columns named "Index", "index" or "id"
-        df = df.drop(columns=[col for col in df.columns if col.lower() in ['index', 'id']], errors='ignore')
+        # df = df.drop(columns=[col for col in df.columns if col.lower() in ['index', 'id','subject#']], errors='ignore')
         
         return df

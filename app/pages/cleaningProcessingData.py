@@ -7,7 +7,7 @@ from src.model.norm_stand import *
 
 baseView()
 
-optionsIgnoredColumns = st.multiselect("Select colum to visualize.",
+optionsIgnoredColumns = st.multiselect("Select colum to ignore/delete.",
                                    list(st.session_state.df),
                                    )
 
