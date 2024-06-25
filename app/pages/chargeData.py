@@ -7,7 +7,7 @@ baseView()
 st.session_state.state = 0
 
 # Bouton d'upload d'un fichier
-file = st.file_uploader("Pick a file", type=["csv"])
+file = st.file_uploader("Pick a file", type=["csv", "data"])
 if file is not None:
     st.session_state.df = loadCSVBase(file)
     st.session_state.initialDf = st.session_state.df.copy()
