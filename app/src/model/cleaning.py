@@ -116,4 +116,6 @@ def fillNullByRegression(df: pd.DataFrame) -> pd.DataFrame:
 
     return df_filled
 
-
+def ignoreColumns(df: pd.DataFrame, ignored_columns: list) -> pd.DataFrame:
+    df = df.drop(columns=ignored_columns)
+    return df
