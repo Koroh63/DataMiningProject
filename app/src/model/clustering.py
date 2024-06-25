@@ -155,7 +155,8 @@ def clusteringHierarchique(datasetStandard, bestColumns, bestNbCluster):
 
     # Visualisation des clusters sur les données
     f = plt.figure(figsize=(6, 6))
-    plt.scatter(datasetStandard[bestColumns[0]], datasetStandard[bestColumns[1]], c=labels, cmap='rainbow')
+    sns.scatterplot(data = datasetStandard, x = (datasetStandard.columns)[0], y = (datasetStandard.columns)[1], hue = labels)
+    # plt.scatter(datasetStandard[bestColumns[0]], datasetStandard[bestColumns[1]], c=labels, cmap='rainbow')
     plt.xlabel(bestColumns[0])
     plt.ylabel(bestColumns[1])
     plt.title('Clustering Hierarchique')

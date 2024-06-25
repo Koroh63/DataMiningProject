@@ -39,6 +39,5 @@ if len(optionFill) == 2:
                 st.write_stream(clusteringKMeans(X_principal, number))  # cluster k-mean
             case "Hierarchic":
                 st.write_stream(clusteringHierarchique(X_principal, optionFill, number))  # cluster hierarchique
-
-        f = dendrogramme(X_principal)
-        st.pyplot(f)
+                f = dendrogramme(X_principal)
+                st.pyplot(f)

@@ -7,19 +7,25 @@ from src.model.norm_stand import *
 
 baseView()
 
+optionsIgnoredColumns = st.multiselect("Select colum to visualize.",
+                                   list(st.session_state.df),
+                                   )
+
 optionFill = st.selectbox("Fill missing value method.",
                           ["Remove", "Mean", "Median", "Mode", "KNN", "Regression"],
                           index=None,
                           placeholder="Select fill missing value method...",
                           )
 
-optionNorm = st.selectbox("Fill missing value method.",
+optionNorm = st.selectbox("Choose normalization/standardisation method.",
                           ["Nothing", "MinMax", "MaxAbs", "Robust", "ZScore"],
                           index=None,
                           placeholder="Select normalize data method...",
                           )
 
 if st.button("Normalize data", disabled=(optionNorm is None or optionFill is None)):
+    st.session_state.df = ignoreColumns(st.session_state.df, optionsIgnoredColumns)
+    print(optionsIgnoredColumns)
     st.session_state.df = transformData(st.session_state.df)
     match optionFill:
         case "Remove":
